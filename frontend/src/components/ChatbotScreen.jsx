@@ -3,6 +3,8 @@
 // src/components/ChatbotScreen.jsx
 import React, { useState, useRef, useEffect } from 'react';
 import { sendTextQuery, sendImageQuery } from './plantMamaAPI'; 
+import { ClipLoader } from 'react-spinners';
+
 
 export default function ChatbotScreen() {
   const [messages, setMessages] = useState([
