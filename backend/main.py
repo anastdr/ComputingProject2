@@ -12,9 +12,9 @@ from torchvision import transforms  # type: ignore
 from pydantic import BaseModel # type: ignore
 from typing import List
 
-from routes.chatbot.chat_prompts import load_class_mapping, get_prediction_info, generate_full_care_prompt
-from routes.chatbot.chatbot import get_gemini_response
-from routes.chatbot.model_to_chatbot import load_model  # use correct path if load_model is defined here
+from routes.chatbot.chat_prompts import load_class_mapping, get_prediction_info, generate_full_care_prompt # type: ignore
+from routes.chatbot.chatbot import get_gemini_response # type: ignore
+from routes.chatbot.model_to_chatbot import load_model  # type: ignore # use correct path if load_model is defined here
 
 
 # Initialize FastAPI app
@@ -23,11 +23,12 @@ app = FastAPI()
 # Enable CORS for the frontend if needed
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["http://localhost:5173",  # dev
+    "https://computing-project2-ten.vercel.app"],  # prod
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 # Load environment variables
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
@@ -100,6 +101,10 @@ async def chat(message: str = Body(..., embed=True)):
         # Log the error and return error message
         print(f"❌ Error occurred: {e}")
         raise HTTPException(status_code=400, detail=f"An error occurred: {str(e)}")
+    
+@app.get("/")
+def root():
+    return {"message": "PlantMama backend is alive"}
     
 
 
