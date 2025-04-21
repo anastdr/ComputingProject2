@@ -20,11 +20,15 @@ from routes.chatbot.model_to_chatbot import load_model  # type: ignore # use cor
 # Initialize FastAPI app
 app = FastAPI()
 
+origins = [
+   "http://localhost:5173",  
+    "computing-project2-ten.vercel.app"        # local dev if needed
+]
+
 # Enable CORS for the frontend if needed
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173",  # dev
-    "https://computing-project-seven.vercel.app"],  # prod
+    allow_origins=origins,  # prod
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
