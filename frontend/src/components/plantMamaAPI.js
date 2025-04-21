@@ -2,7 +2,7 @@
 // src/components/plantMamaAPI.js
 import axios from 'axios';
 
-const BASE_URL = 'https://plantmama-backend.onrender.com'; 
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export const sendTextQuery = async (message) => {
   try {

@@ -2,7 +2,7 @@
 
 // src/components/ChatbotScreen.jsx
 import React, { useState, useRef, useEffect } from 'react';
-import { sendTextQuery, sendImageQuery } from './plantMamaAPI'; // ✅ Import from helper
+import { sendTextQuery, sendImageQuery } from './plantMamaAPI'; 
 
 export default function ChatbotScreen() {
   const [messages, setMessages] = useState([
@@ -125,7 +125,13 @@ export default function ChatbotScreen() {
         />
 
         <label htmlFor="image-upload" className="icon-btn photo-btn">📷</label>
-        <button onClick={handleSend} className="icon-btn">➤</button>
+        <button
+  onClick={handleSend}
+  className="icon-btn"
+  disabled={loading || (!input.trim() && !image)}
+>
+  ➤
+</button>
       </div>
 
       {image && (
