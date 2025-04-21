@@ -161,6 +161,7 @@ body, html {
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
+    scroll-behavior: smooth;
     margin-bottom: 20px;
   }
   

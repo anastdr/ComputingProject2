@@ -6,6 +6,7 @@ import { sendTextQuery, sendImageQuery } from './plantMamaAPI';
 import { ClipLoader } from 'react-spinners';
 
 
+
 export default function ChatbotScreen() {
   const [messages, setMessages] = useState([
     { from: 'bot', text: 'Hi! How can I help you with your plants today?', animate: false }
