@@ -1,0 +1,17 @@
+fastapi[all]
+uvicorn[standard]
+torch
+torchvision
+python-multipart
+google-generativeai
+python-dotenv
+pillow
+requests
+aiofiles
+jinja2
+python-dotenv
+scikit-learn
+matplotlib
+seaborn
+
+
