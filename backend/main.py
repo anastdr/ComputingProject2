@@ -11,6 +11,8 @@ from pathlib import Path
 from torchvision import transforms  # type: ignore
 from pydantic import BaseModel # type: ignore
 from typing import List
+from fastapi.requests import Request # type: ignore
+from fastapi.responses import JSONResponse # type: ignore
 
 from routes.chatbot.chat_prompts import load_class_mapping, get_prediction_info, generate_full_care_prompt # type: ignore
 from routes.chatbot.chatbot import get_gemini_response # type: ignore
@@ -22,7 +24,7 @@ app = FastAPI()
 
 origins = [
    "http://localhost:5173",  
-   "computing-project2-ten.vercel.app"        # local dev if needed
+   "https://computing-project2-ten.vercel.app"        # local dev if needed
 ]
 
 app.add_middleware(
@@ -89,21 +91,28 @@ async def predict_chatbot(image: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"An error occurred: {str(e)}")
 
 
-@app.post("/chat")
-async def chat(message: str = Body(..., embed=True)):
+@app.api_route("/chat", methods=["POST", "OPTIONS"])
+async def chat(request: Request):
+    if request.method == "OPTIONS":
+        # Preflight request — return 200 OK with empty body
+        return JSONResponse(status_code=200, content={})
+
     try:
+        data = await request.json()
+        message = data.get("message")
+        if not message:
+            raise HTTPException(status_code=400, detail="Missing 'message' in request body")
+
         if not api_key:
             return {"error": "API key not set"}
+
         prompt = f"The user asked: {message}\nPlease provide a helpful response about plants."
         response = get_gemini_response(prompt, api_key)
         return {"reply": response}
+
     except Exception as e:
-        return {"error": str(e)}
-    except Exception as e:
-        # Log the error and return error message
         print(f"❌ Error occurred: {e}")
         raise HTTPException(status_code=400, detail=f"An error occurred: {str(e)}")
-    
 @app.get("/")
 def root():
     return {"message": "PlantMama backend is alive"}
