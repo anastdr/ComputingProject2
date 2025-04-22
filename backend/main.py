@@ -22,10 +22,9 @@ app = FastAPI()
 
 origins = [
    "http://localhost:5173",  
-    "computing-project2-ten.vercel.app"        # local dev if needed
+   "computing-project2-ten.vercel.app"        # local dev if needed
 ]
 
-# Enable CORS for the frontend if needed
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # prod
