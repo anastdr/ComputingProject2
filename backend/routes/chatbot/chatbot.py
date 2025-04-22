@@ -7,22 +7,15 @@ def configure_gemini(api_key: str):
     genai.configure(api_key=api_key)
 
 def get_gemini_response(prompt: str, api_key: str) -> str:
-    """Send prompt to Gemini and get response text."""
+    """Send prompt to Gemini and return just the text response."""
     configure_gemini(api_key)
     
-    # Initialize the model with the correct model name
     model = genai.GenerativeModel("gemini-1.5-flash")
-    
-    # Generate content using the prompt
     response = model.generate_content(prompt)
     
-    # Debugging: Check the type of the response
-    print(f"Response type: {type(response)}")
-    
-    # Ensure that the response is a string
-    if isinstance(response, str):
-        return response
-    else:
-        # If it's a non-string object, convert it to string
-        return str(response)
+    try:
+        return response.candidates[0].content.parts[0].text
+    except (AttributeError, IndexError):
+        return "❌ Sorry, I couldn't generate a response. Please try again!"
+
 
