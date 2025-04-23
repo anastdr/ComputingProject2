@@ -4,6 +4,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { sendTextQuery, sendImageQuery } from './plantMamaAPI'; 
 import { ClipLoader } from 'react-spinners';
+import ReactMarkdown from 'react-markdown';
 
 
 
@@ -81,17 +82,29 @@ export default function ChatbotScreen() {
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    // Ensure scrolls only after the new message is added
+    messagesEndRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',  // This ensures the scroll is at the bottom
+    });
+  }, [messages]);  
 
   return (
     <div className="chat-screen">
       <div className="messages">
         {messages.map((msg, idx) => (
           <div key={idx} className={`message ${msg.from} ${msg.animate ? 'fade-in' : ''}`}>
-            {msg.text?.split('\n').map((line, i) => (
-              <div key={i}>{line}</div>
-            ))}
+          {msg.text && (
+            <ReactMarkdown components={{
+              strong: ({ node, ...props }) => <strong {...props} />,
+              em: ({ node, ...props }) => <em {...props} />,
+              ul: ({ node, ...props }) => <ul {...props} />,
+              li: ({ node, ...props }) => <li {...props} />,
+              p: ({ node, ...props }) => <p {...props} />,
+            }}>
+              {msg.text}
+            </ReactMarkdown>
+          )}
             {msg.imageUrl && (
               <img src={msg.imageUrl} alt="Uploaded" className="image-preview" />
             )}
