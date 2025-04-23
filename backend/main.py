@@ -24,13 +24,14 @@ app = FastAPI()
 
 origins = [
    "http://localhost:5173",  
-   "https://computing-project2-ten.vercel.app"        # local dev if needed
+   "https://computing-project2-ten.vercel.app",
+   "https://computing-project2-9ako.vercel.app",
+  "https://computing-project2-9ako-git-main-anastdrs-projects.vercel.app"    # local dev if needed
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
