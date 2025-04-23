@@ -40,7 +40,7 @@ export default function Sidebar() {
         onClick={() => navigate('/chat')}>Chat now</button>
         <p
           className="policy-text hover:text-white cursor-pointer transition"
-          onClick={() => navigate('/privacy')}
+          
         >
           Privacy policy
         </p>
