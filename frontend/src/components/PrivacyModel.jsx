@@ -15,7 +15,7 @@ export default function PrivacyModel({ onClose }) {
           By continuing to use PlantMama, you agree to our terms of use and this privacy policy.
         </p>
         <p style={{ fontSize: '12px', color: '#888' }}>
-          You can always review our full privacy policy at any time in the sidebar.
+          You can always review our full privacy policy at any time.
         </p>
         <button onClick={onClose} className="accept-btn">Accept</button>
       </div>
