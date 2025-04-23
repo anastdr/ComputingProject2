@@ -29,7 +29,8 @@ origins = [
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,  # prod
+    allow_origins=origins,
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -91,12 +92,14 @@ async def predict_chatbot(image: UploadFile = File(...)):
         raise HTTPException(status_code=400, detail=f"An error occurred: {str(e)}")
 
 
-@app.api_route("/chat", methods=["POST", "OPTIONS"])
-async def chat(request: Request):
-    if request.method == "OPTIONS":
-        # Preflight request — return 200 OK with empty body
-        return JSONResponse(status_code=200, content={})
+@app.options("/chat")
+async def chat_options():
+    # Handle CORS preflight request
+    return JSONResponse(status_code=200, content={})
 
+
+@app.post("/chat")
+async def chat_post(request: Request):
     try:
         data = await request.json()
         message = data.get("message")
