@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt  # type: ignore
 import numpy as np  # type: ignore
 import json
 
-# ==== Config ====
+# Config 
 data_dir = Path(__file__).resolve().parent.parent / 'proces_data'  # Change to your processed data directory
 batch_size = 32
 epochs = 10
@@ -19,7 +19,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model_path = 'plant_disease_model_test_2.pth'
 class_index_path = 'class_index.json'
 
-# ==== Data Transforms ====
+#  Data Transforms 
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -28,7 +28,7 @@ transform = transforms.Compose([
 # Define valid extensions for images
 valid_extensions = ('.jpg', '.jpeg', '.png', '.ppm', '.bmp', '.pgm', '.tif', '.tiff', '.webp')
 
-# === Load Data ===
+# Load Data 
 def get_image_files(directory: Path):
     """
     Returns a list of valid image files in the given directory.
@@ -95,24 +95,24 @@ test_loader = DataLoader(test_dataset, batch_size=batch_size)
 with open(class_index_path, 'w') as f:
     json.dump(train_dataset.class_to_idx, f)
 
-# ==== Load Pretrained Model with Dropout ====
+# Load Pretrained Model with Dropout 
 model = models.resnet18(pretrained=True)
 num_classes = len(train_dataset.classes)
-model.fc = nn.Linear(model.fc.in_features, num_classes)  # Modify the last layer to match the number of classes
+model.fc = nn.Linear(model.fc.in_features, num_classes)  
 
 # Add Dropout Layer (drop probability can be adjusted)
 model.layer4[1].register_module('dropout', nn.Dropout(p=0.5))
 
 model = model.to(device)
 
-# ==== Loss and Optimizer with L2 Regularization (Weight Decay) ====
+# Loss and Optimizer with L2 Regularization (Weight Decay)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4)  # L2 regularization (weight decay)
+optimizer = optim.Adam(model.parameters(), lr=lr, weight_decay=1e-4) 
 
-# ==== Learning Rate Scheduler ====
-scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5)  # Reduce LR by half every 5 epochs
+#  Learning Rate Scheduler
+scheduler = optim.lr_scheduler.StepLR(optimizer, step_size=5, gamma=0.5)  
 
-# ==== Early Stopping Setup ====
+# Early Stopping Setup 
 class EarlyStopping:
     def __init__(self, patience=5, delta=0):
         self.patience = patience
@@ -132,7 +132,7 @@ class EarlyStopping:
             if self.counter >= self.patience:
                 self.early_stop = True
 
-# ==== Training Loop ====
+#  Training Loop 
 def train(model, train_loader, val_loader, epochs):
     early_stopping = EarlyStopping(patience=3, delta=0.01)  # Early stopping with patience of 3 epochs
 
@@ -171,7 +171,7 @@ def train(model, train_loader, val_loader, epochs):
             print("Early stopping triggered!")
             break
 
-# ==== Evaluation Function ====
+#  Evaluation Function 
 def evaluate(model, loader):
     model.eval()
     correct = 0
@@ -197,14 +197,14 @@ def evaluate(model, loader):
 
     return correct / total, loss_total / len(loader)
 
-# ==== Train ====
+#  Train
 train(model, train_loader, val_loader, epochs)
 
-# ==== Save Model ====
+# Save Model 
 torch.save(model.state_dict(), model_path)
 print(f"✅ Model saved to {model_path}")
 
-# ==== Test + Confusion Matrix ====
+# Test + Confusion Matrix 
 def test_and_confusion(model, loader):
     model.eval()
     all_preds = []
@@ -226,7 +226,7 @@ def test_and_confusion(model, loader):
     print("📊 Confusion Matrix:")
     print(cm)
 
-    # Optional: plot confusion matrix
+   
     plt.figure(figsize=(8, 6))
     plt.imshow(cm, cmap='Blues')
     plt.title("Confusion Matrix")
@@ -235,5 +235,5 @@ def test_and_confusion(model, loader):
     plt.ylabel("True")
     plt.show()
 
-# ==== Final Test ====
+#  Final Test 
 test_and_confusion(model, test_loader)

@@ -3,10 +3,10 @@ from torchvision import transforms  # type: ignore
 from PIL import Image  # type: ignore
 import os 
 
-# === Core Image Size Standard ===
+# Core Image Size Standard 
 STANDARD_SIZE = (256, 256)
 
-# === Basic Transforms ===
+# Basic Transforms
 def resize_image(image, size=STANDARD_SIZE):
     return transforms.Resize(size)(image)
 
@@ -49,7 +49,7 @@ def perspective_transform_image(image):
 def affine_transform_image(image):
     return transforms.RandomAffine(degrees=15, translate=(0.1, 0.1), scale=(0.9, 1.1), shear=10)(image)
 
-# === Preprocessing Entrypoint ===
+# Preprocessing Entrypoint
 def preprocess_image(image_path, save_path, transformations=[]):
     image = Image.open(image_path).convert('RGB')
     image = resize_image(image)
